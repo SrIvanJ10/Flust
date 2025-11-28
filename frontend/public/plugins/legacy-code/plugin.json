@@ -1,0 +1,17 @@
+{
+  "id": "legacy-code",
+  "name": "Legacy Code",
+  "category": "Code Blocks",
+  "icon": "CODE",
+  "description": "Bloque de código Rust libre",
+  "properties": [
+    {
+      "name": "code",
+      "type": "code",
+      "label": "Código",
+      "default": "// Tu código aquí",
+      "required": true,
+      "multiline": true
+    }
+  ]
+}

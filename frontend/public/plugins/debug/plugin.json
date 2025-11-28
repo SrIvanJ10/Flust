@@ -1,0 +1,25 @@
+{
+    "id": "debug",
+    "name": "Debug",
+    "category": "Utilities",
+    "icon": "🐛",
+    "description": "Imprime cualquier variable en la consola usando Debug trait",
+    "properties": [
+        {
+            "name": "variable",
+            "type": "text",
+            "label": "Variable a imprimir",
+            "default": "value",
+            "required": true,
+            "multiline": false
+        },
+        {
+            "name": "label",
+            "type": "text",
+            "label": "Etiqueta (opcional)",
+            "default": "",
+            "required": false,
+            "multiline": false
+        }
+    ]
+}
