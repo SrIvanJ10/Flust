@@ -1,0 +1,218 @@
+{
+  "version": "1.0",
+  "metadata": {
+    "name": "my_flow",
+    "created": "2025-11-29T13:40:52.354Z",
+    "modified": "2025-11-29T13:40:52.354Z"
+  },
+  "nodes": [
+    {
+      "id": "node_0",
+      "pluginId": "function-definition",
+      "position": {
+        "x": -111.16523678755311,
+        "y": 234.08494063002155
+      },
+      "data": {
+        "label": "Main Function",
+        "pluginId": "function-definition",
+        "nodeType": "function-definition",
+        "function_name": "main",
+        "arguments": [],
+        "icon": "\ud83d\udce6"
+      }
+    },
+    {
+      "id": "node_1",
+      "pluginId": "start-node",
+      "position": {
+        "x": 7.565036432854498,
+        "y": 54.313908914570504
+      },
+      "data": {
+        "label": "Start",
+        "pluginId": "start-node",
+        "nodeType": "start-node",
+        "icon": "\u25b6\ufe0f"
+      },
+      "parentNode": "node_0"
+    },
+    {
+      "id": "node_2",
+      "pluginId": "function-definition",
+      "position": {
+        "x": 376.79219333928836,
+        "y": 251.97403450237695
+      },
+      "data": {
+        "label": "Pow",
+        "pluginId": "function-definition",
+        "nodeType": "function-definition",
+        "function_name": "pow",
+        "arguments": [
+          {
+            "name": "num",
+            "type": "i8"
+          },
+          {
+            "name": "exp",
+            "type": "i8"
+          }
+        ]
+      }
+    },
+    {
+      "id": "node_4",
+      "pluginId": "legacy-code",
+      "position": {
+        "x": 197.9888019996028,
+        "y": 111.71377236667001
+      },
+      "data": {
+        "label": "Legacy Code",
+        "pluginId": "legacy-code",
+        "nodeType": "legacy-code",
+        "code": "let a: i8 = 2;\n\nlet b: i8 = 3;"
+      },
+      "parentNode": "node_0"
+    },
+    {
+      "id": "node_5",
+      "pluginId": "call-function",
+      "position": {
+        "x": 131.14263774713277,
+        "y": 208.4842795429057
+      },
+      "data": {
+        "label": "Call Function",
+        "pluginId": "call-function",
+        "nodeType": "call-function",
+        "target_function": "pow",
+        "arguments": [
+          {
+            "name": "num",
+            "type": "i8"
+          },
+          {
+            "name": "exp",
+            "type": "i8"
+          }
+        ],
+        "return_variable": "potencia",
+        "return_type": "i32",
+        "declare_variable": true,
+        "is_mutable": false
+      },
+      "parentNode": "node_0"
+    },
+    {
+      "id": "node_6",
+      "pluginId": "legacy-code",
+      "position": {
+        "x": 139.61851134867925,
+        "y": 160.64592793416236
+      },
+      "data": {
+        "label": "Legacy Code",
+        "pluginId": "legacy-code",
+        "nodeType": "legacy-code",
+        "code": "let mut potencia: i32 = 1;\n\nfor i in 1..exp{\n    potencia *= num\n}"
+      },
+      "parentNode": "node_2"
+    },
+    {
+      "id": "node_7",
+      "pluginId": "start-node",
+      "position": {
+        "x": 26.21509185870525,
+        "y": 84.83930340878513
+      },
+      "data": {
+        "label": "Start",
+        "pluginId": "start-node",
+        "nodeType": "start-node"
+      },
+      "parentNode": "node_2"
+    },
+    {
+      "id": "node_8",
+      "pluginId": "legacy-code",
+      "position": {
+        "x": 388.35632423752236,
+        "y": 201.86767056408243
+      },
+      "data": {
+        "label": "Legacy Code",
+        "pluginId": "legacy-code",
+        "nodeType": "legacy-code",
+        "code": "return potencia;"
+      },
+      "parentNode": "node_2"
+    },
+    {
+      "id": "node_10",
+      "pluginId": "debug",
+      "position": {
+        "x": 392.82790497869576,
+        "y": 106.63820299893658
+      },
+      "data": {
+        "label": "debug",
+        "pluginId": "debug",
+        "nodeType": "debug",
+        "variable": "potencia"
+      },
+      "parentNode": "node_2"
+    }
+  ],
+  "edges": [
+    {
+      "id": "reactflow__edge-node_1-node_4",
+      "source": "node_1",
+      "target": "node_4",
+      "data": {
+        "connectionType": "simple",
+        "variableMapping": {}
+      }
+    },
+    {
+      "id": "reactflow__edge-node_4-node_5",
+      "source": "node_4",
+      "target": "node_5",
+      "data": {
+        "connectionType": "simple",
+        "variableMapping": {
+          "num": "a",
+          "exp": "b"
+        }
+      }
+    },
+    {
+      "id": "reactflow__edge-node_7-node_6",
+      "source": "node_7",
+      "target": "node_6",
+      "data": {
+        "connectionType": "simple",
+        "variableMapping": {}
+      }
+    },
+    {
+      "id": "reactflow__edge-node_6-node_8",
+      "source": "node_6",
+      "target": "node_8",
+      "data": {
+        "connectionType": "simple",
+        "variableMapping": {}
+      }
+    },
+    {
+      "id": "reactflow__edge-node_6-node_10",
+      "source": "node_6",
+      "target": "node_10",
+      "data": {
+        "connectionType": "simple",
+        "variableMapping": {}
+      }
+    }
+  ]
+}

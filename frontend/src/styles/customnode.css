@@ -1,0 +1,97 @@
+.custom-node {
+    background: #2a2a2a;
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+    padding: 12px;
+    min-width: 180px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.node-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+}
+
+.node-icon {
+    font-size: 24px;
+    width: 30px;
+    text-align: center;
+}
+
+.node-label {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.node-settings {
+    background: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px;
+    transition: all 0.2s;
+}
+
+.node-settings:hover {
+    color: #f44336;
+    transform: rotate(90deg);
+}
+
+.handle-input {
+    background: #4CAF50 !important;
+    width: 12px !important;
+    height: 12px !important;
+}
+
+.handle-output {
+    background: #2196F3 !important;
+    width: 12px !important;
+    height: 12px !important;
+}
+
+/* Container Node Styles */
+.container-node {
+    background: rgba(42, 42, 42, 0.8);
+    border: 2px dashed #888;
+    min-width: 400px;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    z-index: 1;
+    /* Keep containers below edges */
+}
+
+.container-header {
+    background: #333;
+    padding: 8px 12px;
+    border-bottom: 1px solid #555;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 6px 6px 0 0;
+}
+
+.container-body {
+    flex: 1;
+    position: relative;
+    min-height: 200px;
+}
+
+/* Resize handles */
+.resize-line {
+    border-color: #4CAF50 !important;
+    border-width: 2px !important;
+}
+
+.resize-handle {
+    width: 10px !important;
+    height: 10px !important;
+    background: #4CAF50 !important;
+    border: 2px solid #fff !important;
+    border-radius: 50% !important;
+}

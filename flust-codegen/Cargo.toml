@@ -1,0 +1,9 @@
+[package]
+name = "flust-codegen"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.100"
+flust-core = { version = "0.1.0", path = "../flust-core" }
+serde_json = "1.0"

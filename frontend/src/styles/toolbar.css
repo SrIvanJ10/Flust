@@ -1,0 +1,81 @@
+.toolbar {
+    height: 60px;
+    background: #1e1e1e;
+    border-bottom: 2px solid #444;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 10px;
+}
+
+.toolbar-btn {
+    background: #3a3a3a;
+    border: 1px solid #555;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s;
+}
+
+.toolbar-btn:hover {
+    background: #4a4a4a;
+    border-color: #4CAF50;
+}
+
+.toolbar-btn-play:hover {
+    background: #4CAF50;
+    border-color: #4CAF50;
+}
+
+.toolbar-btn-stop:hover {
+    background: #f44336;
+    border-color: #f44336;
+}
+
+.toolbar-btn-download {
+    background: #2196F3;
+}
+
+.toolbar-btn-download:hover {
+    background: #1976D2;
+    border-color: #1976D2;
+}
+
+.toolbar-project-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 10px;
+}
+
+.toolbar-project-name label {
+    color: #aaa;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.project-name-input {
+    background: #2a2a2a;
+    border: 1px solid #555;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: 'Courier New', monospace;
+    width: 180px;
+}
+
+.project-name-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+.toolbar-title {
+    flex: 1;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #4CAF50;
+}

@@ -1,0 +1,8 @@
+[workspace]
+members = [
+    "flust-core",
+    "flust-codegen",
+    "flust-cli",
+    "flust-server", "output_project",
+]
+resolver = "2"
