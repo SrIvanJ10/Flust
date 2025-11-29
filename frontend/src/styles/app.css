@@ -71,15 +71,34 @@ body {
 
 .react-flow__node {
     cursor: pointer;
+    z-index: 2;
+    /* Regular nodes above containers */
+}
+
+.react-flow__edge {
+    z-index: 1000 !important;
+    /* Edges above everything to be selectable, especially inside containers */
+    pointer-events: all !important;
+    /* Ensure edges are clickable */
 }
 
 .react-flow__edge-path {
     stroke: #4CAF50;
     stroke-width: 2;
+    cursor: pointer;
+    /* Show pointer cursor on edges */
 }
 
 .react-flow__edge.selected .react-flow__edge-path {
     stroke: #2196F3;
+    stroke-width: 3;
+    /* Make selected edges thicker */
+}
+
+/* Make edge interaction area larger for easier clicking */
+.react-flow__edge-interaction {
+    stroke-width: 20 !important;
+    /* Larger invisible click area */
 }
 
 .react-flow__controls {

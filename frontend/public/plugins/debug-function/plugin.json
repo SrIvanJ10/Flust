@@ -1,0 +1,41 @@
+{
+    "id": "debug-function",
+    "name": "Debug Function",
+    "category": "Utilities",
+    "icon": "🔍",
+    "description": "Función debug omnipotente que acepta cualquier tipo de dato",
+    "properties": [
+        {
+            "name": "function_name",
+            "type": "text",
+            "label": "Nombre de la función",
+            "default": "debug_print",
+            "required": true,
+            "multiline": false
+        },
+        {
+            "name": "arguments",
+            "type": "arguments",
+            "label": "Argumentos",
+            "default": [
+                {
+                    "name": "label",
+                    "type": "String"
+                },
+                {
+                    "name": "value",
+                    "type": "impl std::fmt::Debug"
+                }
+            ],
+            "required": false
+        },
+        {
+            "name": "code",
+            "type": "code",
+            "label": "Código de la función",
+            "default": "if !label.is_empty() {\n    println!(\"{}: {:?}\", label, value);\n} else {\n    println!(\"{:?}\", value);\n}",
+            "required": true,
+            "multiline": true
+        }
+    ]
+}

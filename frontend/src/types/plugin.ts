@@ -1,11 +1,24 @@
 /**
+ * Connection type - defines how the connection behaves
+ */
+export type ConnectionType = 'simple' | 'function_call';
+
+/**
+ * Function argument definition
+ */
+export interface FunctionArgument {
+    name: string;
+    type: string; // Rust type (e.g., "i32", "String", "impl Debug")
+}
+
+/**
  * Property definition for a plugin
  */
 export interface PluginProperty {
     name: string;
-    type: 'text' | 'code' | 'number' | 'boolean';
+    type: 'text' | 'code' | 'number' | 'boolean' | 'arguments';
     label: string;
-    default: string | number | boolean;
+    default: string | number | boolean | FunctionArgument[];
     required: boolean;
     multiline?: boolean;
 }
@@ -32,6 +45,7 @@ export interface FlowNode {
     pluginId: string;
     position: { x: number; y: number };
     data: Record<string, any>;
+    parentNode?: string;
 }
 
 /**
@@ -41,6 +55,8 @@ export interface FlowEdge {
     id: string;
     source: string;
     target: string;
+    connectionType?: ConnectionType;
+    variableMapping?: Record<string, string>; // argument name -> variable name
     data?: Record<string, any>;
 }
 

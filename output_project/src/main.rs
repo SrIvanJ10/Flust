@@ -1,5 +1,20 @@
-fn main() {
-    let sensor = 25.0; // Mock input
-    let threshold = if sensor > 30.0 { 1.0 } else { 0.0 };
-    println!("Alarm: {}", threshold);
+async fn pow(num: i8, exp: i8) -> i32 {
+    let mut potencia: i32 = 1;
+    let mut i = 1;
+    while i <= exp {
+        potencia *= num as i32;
+        i += 1;
+    }
+    println!("{:?}", potencia);
+    return potencia;
+
+}
+
+#[tokio::main]
+async fn main() {
+    let a: i8 = 2;
+    let b: i8 = 3;
+    let mut potencia: i32 = pow(a, b).await;
+    potencia += 3;
+    println!("{:?}", potencia);
 }

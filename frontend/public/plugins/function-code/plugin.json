@@ -1,0 +1,32 @@
+{
+    "id": "function-code",
+    "name": "Function Code",
+    "category": "Code Blocks",
+    "icon": "⚡",
+    "description": "Define una función Rust reutilizable con argumentos tipados",
+    "properties": [
+        {
+            "name": "function_name",
+            "type": "text",
+            "label": "Nombre de la función",
+            "default": "my_function",
+            "required": true,
+            "multiline": false
+        },
+        {
+            "name": "arguments",
+            "type": "arguments",
+            "label": "Argumentos",
+            "default": [],
+            "required": false
+        },
+        {
+            "name": "code",
+            "type": "code",
+            "label": "Código de la función",
+            "default": "// Código de la función aquí",
+            "required": true,
+            "multiline": true
+        }
+    ]
+}

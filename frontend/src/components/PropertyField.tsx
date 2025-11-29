@@ -51,6 +51,59 @@ const PropertyField: React.FC<PropertyFieldProps> = ({ property, value, onChange
         );
     }
 
+    // Arguments list for function definitions
+    if (property.type === 'arguments') {
+        const args = value ?? property.default ?? [];
+
+        const handleAddArgument = () => {
+            onChange([...args, { name: '', type: '' }]);
+        };
+
+        const handleRemoveArgument = (index: number) => {
+            onChange(args.filter((_: any, i: number) => i !== index));
+        };
+
+        const handleUpdateArgument = (index: number, field: 'name' | 'type', newValue: string) => {
+            const updated = [...args];
+            updated[index] = { ...updated[index], [field]: newValue };
+            onChange(updated);
+        };
+
+        return (
+            <div className="arguments-list">
+                {args.map((arg: any, index: number) => (
+                    <div key={index} className="argument-item">
+                        <input
+                            type="text"
+                            value={arg.name || ''}
+                            onChange={(e) => handleUpdateArgument(index, 'name', e.target.value)}
+                            placeholder="nombre"
+                            className="property-input argument-name"
+                        />
+                        <span>:</span>
+                        <input
+                            type="text"
+                            value={arg.type || ''}
+                            onChange={(e) => handleUpdateArgument(index, 'type', e.target.value)}
+                            placeholder="tipo (ej: i32)"
+                            className="property-input argument-type"
+                        />
+                        <button
+                            onClick={() => handleRemoveArgument(index)}
+                            className="btn-remove-arg"
+                            title="Eliminar argumento"
+                        >
+                            ✕
+                        </button>
+                    </div>
+                ))}
+                <button onClick={handleAddArgument} className="btn-add-arg">
+                    + Añadir argumento
+                </button>
+            </div>
+        );
+    }
+
     // Default text input
     return (
         <input

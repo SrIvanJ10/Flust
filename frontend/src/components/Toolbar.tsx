@@ -20,8 +20,8 @@ const Toolbar: React.FC<ToolbarProps> = ({
 }) => {
     return (
         <div className="toolbar">
-            <button className="toolbar-btn" onClick={onMenu} title="Cargar flujo">
-                📂
+            <button className="toolbar-btn" onClick={onMenu} title="Load .flow">
+                Load .flow
             </button>
 
             <div className="toolbar-project-name">
@@ -35,19 +35,19 @@ const Toolbar: React.FC<ToolbarProps> = ({
                 />
             </div>
 
-            <button className="toolbar-btn toolbar-btn-play" onClick={onPlay} title="Compilar (Ver código)">
-                ▶️ Compilar
+            <div className="toolbar-title">Flust - Rust Visual Editor</div>
+
+            <button className="toolbar-btn toolbar-btn-play" onClick={onPlay} title="Compile and run">
+                Compile and run
             </button>
 
-            <button className="toolbar-btn toolbar-btn-download" onClick={onDownloadCode} title="Descargar código Rust">
-                ⬇️ Descargar .rs
+            <button className="toolbar-btn toolbar-btn-download" onClick={onDownloadCode} title="Download .rs">
+                Download rust code
             </button>
 
-            <button className="toolbar-btn" onClick={onSave} title="Guardar flujo">
-                💾 Guardar .flow
+            <button className="toolbar-btn" onClick={onSave} title="Save .flow">
+                Download flow
             </button>
-
-            <div className="toolbar-title">Flust - Editor Visual Rust</div>
         </div>
     );
 };

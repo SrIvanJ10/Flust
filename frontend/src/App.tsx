@@ -1,4 +1,7 @@
 import { useCallback, useState, useRef, type DragEvent } from 'react';
+import axios from 'axios';
+
+
 import ReactFlow, {
   addEdge,
   Background,
@@ -26,11 +29,39 @@ const nodeTypes: NodeTypes = {
   custom: CustomNode,
 };
 
-let nodeId = 0;
+let nodeId = 2;
 const getId = () => `node_${nodeId++}`;
 
 function Flow() {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState([
+    {
+      id: 'node_0',
+      type: 'custom',
+      position: { x: 100, y: 100 },
+      data: {
+        label: 'Main Function',
+        pluginId: 'function-definition',
+        nodeType: 'function-definition',
+        function_name: 'main',
+        arguments: [],
+        icon: '📦'
+      },
+      style: { width: 600, height: 400 }
+    },
+    {
+      id: 'node_1',
+      type: 'custom',
+      position: { x: 50, y: 50 },
+      data: {
+        label: 'Start',
+        pluginId: 'start-node',
+        nodeType: 'start-node',
+        icon: '▶️'
+      },
+      parentNode: 'node_0',
+      extent: 'parent'
+    }
+  ]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [logs, setLogs] = useState<string[]>([]);
   const [terminalOutput, setTerminalOutput] = useState<string[]>([]);
@@ -59,7 +90,14 @@ function Flow() {
 
   const onConnect = useCallback(
     (params: Connection) => {
-      setEdges((eds) => addEdge(params, eds));
+      const newEdge = {
+        ...params,
+        data: {
+          connectionType: 'simple',
+          variableMapping: {},
+        },
+      };
+      setEdges((eds) => addEdge(newEdge, eds));
       addLog('Conexión creada');
     },
     [setEdges],
@@ -116,6 +154,14 @@ function Flow() {
   );
 
   const handleDeleteNode = (nodeId: string) => {
+    if (reactFlowInstance) {
+      const node = reactFlowInstance.getNode(nodeId);
+      if (node?.data.function_name === 'main' && node?.data.pluginId === 'function-definition') {
+        addLog('⚠️ No se puede eliminar la función main');
+        return;
+      }
+    }
+
     setNodes((nds) => nds.filter((node) => node.id !== nodeId));
     setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
     if (selectedNode?.id === nodeId) {
@@ -167,16 +213,22 @@ function Flow() {
 
     try {
       // First, generate the code
-      const irNodes = nodes.map((n) => ({
-        id: n.id,
-        type: n.data.pluginId || n.data.nodeType || 'legacy_code',
-        label: n.data.label,
-        ...n.data,
-      }));
+      const irNodes = nodes.map((n) => {
+        const { pluginId, nodeType, label, ...otherProps } = n.data;
+        return {
+          id: n.id,
+          plugin_type: pluginId || nodeType || 'legacy_code',
+          label: label || null,
+          properties: otherProps,
+          parent_id: n.parentNode || null,
+        };
+      });
 
       const irConnections = edges.map((e) => ({
         from: e.source,
         to: e.target,
+        connection_type: e.data?.connectionType || 'simple',
+        variable_mapping: e.data?.variableMapping,
       }));
 
       const flow = {
@@ -229,9 +281,6 @@ function Flow() {
     }
   };
 
-  const handleStop = () => {
-    addLog('Ejecución detenida');
-  };
 
   const handleSave = () => {
     // Save .flow.json file
@@ -247,6 +296,7 @@ function Flow() {
         pluginId: node.data.pluginId || node.data.nodeType,
         position: node.position,
         data: { ...node.data },
+        parentNode: node.parentNode,
       })),
       edges: edges.map(edge => ({
         id: edge.id,
@@ -270,16 +320,22 @@ function Flow() {
   const handleDownloadCode = async () => {
     addLog('Generando código Rust...');
     try {
-      const irNodes = nodes.map((n) => ({
-        id: n.id,
-        type: n.data.pluginId || n.data.nodeType || 'legacy_code',
-        label: n.data.label,
-        ...n.data,
-      }));
+      const irNodes = nodes.map((n) => {
+        const { pluginId, nodeType, label, ...otherProps } = n.data;
+        return {
+          id: n.id,
+          plugin_type: pluginId || nodeType || 'legacy_code',
+          label: label || null,
+          properties: otherProps,
+          parent_id: n.parentNode || null,
+        };
+      });
 
       const irConnections = edges.map((e) => ({
         from: e.source,
         to: e.target,
+        connection_type: e.data?.connectionType || 'simple',
+        variable_mapping: e.data?.variableMapping,
       }));
 
       const flow = {
@@ -303,8 +359,11 @@ function Flow() {
       addLog(`Código descargado: ${flowName}.rs`);
       addLog(`Líneas de código: ${result.code.split('\n').length}`);
     } catch (error) {
-      addLog('Error al generar código');
+      addLog('Error al generar código: ' + String(error));
       console.error('Code generation failed:', error);
+      if (axios.isAxiosError(error)) {
+        addLog('Detalles: ' + (error.response?.data?.error || error.message));
+      }
     }
   };
 
@@ -329,6 +388,7 @@ function Flow() {
                 ...flowNode.data,
                 onDelete: handleDeleteNode,
               },
+              parentNode: flowNode.parentNode,
             }));
 
             // Restore edges
@@ -342,9 +402,17 @@ function Flow() {
             setNodes(restoredNodes);
             setEdges(restoredEdges);
             setFlowName(flowFile.metadata.name);
+
+            // Update nodeId counter to avoid collisions
+            const maxId = restoredNodes.reduce((max, node) => {
+              const idNum = parseInt(node.id.replace('node_', ''));
+              return !isNaN(idNum) && idNum > max ? idNum : max;
+            }, 0);
+            nodeId = maxId + 1;
+
             addLog(`Flujo cargado: ${flowFile.metadata.name}`);
           } catch (error) {
-            addLog('Error al cargar flujo');
+            addLog('Error al cargar flujo: ' + String(error));
             console.error('Load failed:', error);
           }
         };
@@ -357,6 +425,74 @@ function Flow() {
   const handleMenu = () => {
     handleLoad();
   };
+
+  const onNodeDragStop = useCallback(
+    (_: React.MouseEvent, node: Node) => {
+      if (!reactFlowInstance) return;
+
+      const nodes = reactFlowInstance.getNodes();
+
+      // Calculate absolute position of the dragged node
+      let absolutePos = { ...node.position };
+      if (node.parentNode) {
+        const parent = nodes.find((n: Node) => n.id === node.parentNode);
+        if (parent) {
+          absolutePos.x += parent.position.x;
+          absolutePos.y += parent.position.y;
+        }
+      }
+
+      // Check intersection with function-definition nodes
+      const newParent = nodes.find(
+        (n: Node) =>
+          n.id !== node.id &&
+          n.data.pluginId === 'function-definition' &&
+          absolutePos.x >= n.position.x &&
+          absolutePos.x < n.position.x + (n.width || 400) &&
+          absolutePos.y >= n.position.y &&
+          absolutePos.y < n.position.y + (n.height || 300)
+      );
+
+      if (newParent) {
+        // If already has this parent, do nothing
+        if (node.parentNode === newParent.id) return;
+
+        // Set parent and convert absolute position to relative
+        setNodes((nds) =>
+          nds.map((n) => {
+            if (n.id === node.id) {
+              return {
+                ...n,
+                parentNode: newParent.id,
+                extent: 'parent',
+                position: {
+                  x: absolutePos.x - newParent.position.x,
+                  y: absolutePos.y - newParent.position.y
+                }
+              };
+            }
+            return n;
+          })
+        );
+      } else if (node.parentNode) {
+        // Remove parent and convert relative position to absolute
+        setNodes((nds) =>
+          nds.map((n) => {
+            if (n.id === node.id) {
+              return {
+                ...n,
+                parentNode: undefined,
+                extent: undefined,
+                position: absolutePos
+              };
+            }
+            return n;
+          })
+        );
+      }
+    },
+    [reactFlowInstance, setNodes]
+  );
 
   return (
     <div className="app-container">
@@ -380,10 +516,12 @@ function Flow() {
             onInit={setReactFlowInstance}
             onDrop={onDrop}
             onDragOver={onDragOver}
+            onNodeDragStop={onNodeDragStop}
             onNodeClick={handleNodeClick}
             onEdgeClick={handleEdgeClick}
             onPaneClick={handlePaneClick}
             nodeTypes={nodeTypes}
+            elevateEdgesOnSelect={true}
             fitView
           >
             <Controls />
@@ -393,6 +531,7 @@ function Flow() {
         <PropertiesPanel
           selectedNode={selectedNode}
           selectedEdge={selectedEdge}
+          nodes={nodes}
           onUpdateNode={handleUpdateNode}
           onUpdateEdge={handleUpdateEdge}
         />

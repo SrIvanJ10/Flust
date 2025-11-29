@@ -14,12 +14,26 @@ pub struct Flow {
 pub struct Node {
     pub id: String,
     /// Plugin type (e.g., "legacy-code", "debug")
-    #[serde(rename = "type")]
     pub plugin_type: String,
     pub label: Option<String>,
     /// Dynamic properties from plugin definition
-    #[serde(flatten)]
     pub properties: HashMap<String, serde_json::Value>,
+    /// Parent node ID for hierarchical structures (e.g. function containers)
+    pub parent_id: Option<String>,
+}
+
+/// Connection type - defines how the connection behaves
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum ConnectionType {
+    Simple,
+    FunctionCall,
+}
+
+impl Default for ConnectionType {
+    fn default() -> Self {
+        ConnectionType::Simple
+    }
 }
 
 /// Connection - represents data flow between nodes
@@ -27,4 +41,8 @@ pub struct Node {
 pub struct Connection {
     pub from: String, // Source node ID
     pub to: String,   // Target node ID
+    #[serde(default)]
+    pub connection_type: ConnectionType,
+    /// Maps argument name to variable name for function calls
+    pub variable_mapping: Option<HashMap<String, String>>,
 }

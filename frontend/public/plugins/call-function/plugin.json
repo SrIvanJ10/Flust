@@ -1,0 +1,39 @@
+{
+    "id": "call-function",
+    "name": "Call Function",
+    "category": "Functions",
+    "description": "Call a defined function",
+    "icon": "📞",
+    "properties": [
+        {
+            "name": "target_function",
+            "type": "text",
+            "label": "Target Function",
+            "default": ""
+        },
+        {
+            "name": "return_variable",
+            "type": "text",
+            "label": "Return Variable",
+            "default": ""
+        },
+        {
+            "name": "return_type",
+            "type": "text",
+            "label": "Return Type",
+            "default": ""
+        },
+        {
+            "name": "declare_variable",
+            "type": "boolean",
+            "label": "Declare New Variable",
+            "default": true
+        },
+        {
+            "name": "is_mutable",
+            "type": "boolean",
+            "label": "Mutable (mut)",
+            "default": false
+        }
+    ]
+}

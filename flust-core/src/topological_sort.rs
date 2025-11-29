@@ -96,6 +96,8 @@ mod tests {
                 Connection {
                     from: "a".to_string(),
                     to: "b".to_string(),
+                    connection_type: Default::default(),
+                    variable_mapping: None,
                 },
             ],
         };

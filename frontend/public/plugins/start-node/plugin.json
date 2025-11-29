@@ -1,0 +1,9 @@
+{
+    "id": "start-node",
+    "name": "Start",
+    "category": "Flow Control",
+    "description": "Entry point for the function",
+    "icon": "▶️",
+    "properties": [],
+    "nodeType": "output"
+}

@@ -63,81 +63,58 @@ async fn execute_code(
 ) -> Result<Json<ExecuteResponse>, ApiError> {
     println!("📥 Received execution request for: {}", request.filename);
 
-    // Create temporary directory
-    let temp_dir = TempDir::new().map_err(|e| {
-        ApiError::InternalError(format!("Failed to create temp dir: {}", e))
-    })?;
+    // Use output_project directory in the workspace root
+    let project_path = std::path::Path::new("./output_project");
     
-    let temp_path = temp_dir.path();
-    let rs_file = temp_path.join(format!("{}.rs", request.filename));
-    let binary_file = temp_path.join(&request.filename);
+    if !project_path.exists() {
+         return Err(ApiError::InternalError("output_project directory not found. Make sure you are running from the workspace root.".to_string()));
+    }
 
-    // Write code to file
-    fs::write(&rs_file, &request.code).map_err(|e| {
+    let src_path = project_path.join("src");
+    let main_rs = src_path.join("main.rs");
+
+    // Write code to src/main.rs
+    fs::write(&main_rs, &request.code).map_err(|e| {
         ApiError::InternalError(format!("Failed to write file: {}", e))
     })?;
 
-    println!("📝 Wrote code to: {}", rs_file.display());
+    println!("📝 Wrote code to: {}", main_rs.display());
 
-    // Compile with rustc
-    println!("🔨 Compiling with rustc...");
-    let compile_result = Command::new("rustc")
-        .arg(&rs_file)
-        .arg("-o")
-        .arg(&binary_file)
-        .current_dir(temp_path)
+    // Execute with cargo run
+    println!("▶️  Executing with cargo run...");
+    let exec_result = Command::new("cargo")
+        .arg("run")
+        .arg("--quiet")
+        .current_dir(project_path)
         .output()
         .map_err(|e| {
-            ApiError::InternalError(format!("Failed to run rustc: {}", e))
+            ApiError::InternalError(format!("Failed to execute cargo run: {}", e))
         })?;
 
-    let compile_output = format!(
-        "{}{}",
-        String::from_utf8_lossy(&compile_result.stdout),
-        String::from_utf8_lossy(&compile_result.stderr)
-    );
+    let stdout = String::from_utf8_lossy(&exec_result.stdout).to_string();
+    let stderr = String::from_utf8_lossy(&exec_result.stderr).to_string();
 
-    if !compile_result.status.success() {
-        println!("❌ Compilation failed");
+    if !exec_result.status.success() {
+        println!("❌ Execution failed");
         return Ok(Json(ExecuteResponse {
             success: false,
-            compile_output,
-            execution_output: String::new(),
-            error: Some("Compilation failed".to_string()),
+            compile_output: stderr,
+            execution_output: stdout,
+            error: Some("Execution failed".to_string()),
         }));
     }
 
-    println!("✅ Compilation successful");
-
-    // Execute the binary
-    println!("▶️  Executing binary...");
-    let exec_result = Command::new(&binary_file)
-        .current_dir(temp_path)
-        .output()
-        .map_err(|e| {
-            ApiError::InternalError(format!("Failed to execute binary: {}", e))
-        })?;
-
-    let execution_output = format!(
-        "{}{}",
-        String::from_utf8_lossy(&exec_result.stdout),
-        String::from_utf8_lossy(&exec_result.stderr)
-    );
-
-    println!("✅ Execution completed");
-    println!("📤 Output: {} bytes", execution_output.len());
+    println!("✅ Execution successful");
 
     Ok(Json(ExecuteResponse {
         success: true,
-        compile_output: if compile_output.is_empty() {
-            "Compilation successful (no warnings)".to_string()
-        } else {
-            compile_output
-        },
-        execution_output,
+        compile_output: stderr, // Warnings might be here
+        execution_output: stdout,
         error: None,
     }))
 }
+
+
 
 #[derive(Serialize)]
 struct CompileResponse {

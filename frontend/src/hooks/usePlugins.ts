@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import type { Plugin } from '../types/plugin';
 
+
 const PLUGIN_IDS = [
     'legacy-code',
     'debug',
+    'function-definition',
+    'call-function',
+    'start-node',
 ];
 
 export const usePlugins = () => {

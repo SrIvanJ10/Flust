@@ -1,0 +1,33 @@
+{
+    "id": "function-definition",
+    "name": "Function Definition",
+    "category": "Functions",
+    "description": "Container for defining a function",
+    "icon": "📦",
+    "properties": [
+        {
+            "name": "function_name",
+            "type": "text",
+            "label": "Function Name",
+            "default": "my_function"
+        },
+        {
+            "name": "arguments",
+            "type": "arguments",
+            "label": "Arguments",
+            "default": []
+        },
+        {
+            "name": "return_type",
+            "type": "text",
+            "label": "Return Type",
+            "default": ""
+        }
+    ],
+    "style": {
+        "width": 400,
+        "height": 300,
+        "backgroundColor": "rgba(240, 240, 240, 0.5)",
+        "border": "2px dashed #888"
+    }
+}

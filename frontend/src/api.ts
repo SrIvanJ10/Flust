@@ -1,18 +1,19 @@
 import axios from 'axios';
-import type { FlowFile } from './types/plugin';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 
 export interface FlowIR {
     nodes: Array<{
         id: string;
-        type: string;
-        label?: string;
-        [key: string]: any;
+        plugin_type: string;
+        label?: string | null;
+        properties: Record<string, any>;
     }>;
     connections: Array<{
         from: string;
         to: string;
+        connection_type?: string;
+        variable_mapping?: Record<string, string>;
     }>;
 }
 

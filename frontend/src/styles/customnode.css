@@ -52,3 +52,46 @@
     width: 12px !important;
     height: 12px !important;
 }
+
+/* Container Node Styles */
+.container-node {
+    background: rgba(42, 42, 42, 0.8);
+    border: 2px dashed #888;
+    min-width: 400px;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    z-index: 1;
+    /* Keep containers below edges */
+}
+
+.container-header {
+    background: #333;
+    padding: 8px 12px;
+    border-bottom: 1px solid #555;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 6px 6px 0 0;
+}
+
+.container-body {
+    flex: 1;
+    position: relative;
+    min-height: 200px;
+}
+
+/* Resize handles */
+.resize-line {
+    border-color: #4CAF50 !important;
+    border-width: 2px !important;
+}
+
+.resize-handle {
+    width: 10px !important;
+    height: 10px !important;
+    background: #4CAF50 !important;
+    border: 2px solid #fff !important;
+    border-radius: 50% !important;
+}
